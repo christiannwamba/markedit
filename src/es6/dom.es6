@@ -6,14 +6,19 @@ export class Dom {
         this.document = document;
         this.controls = controls;
         this.options = options;
+        this.eventListenerFunc = ('addEventListener')
         this.handler = new Handler(document);
+    }
+    
+    private makeElem(elemName){
+        return this.document.createElement(elemName);
     }
 
     makeWrapper() {
-        let wrapper = this.document.createElement('div');
+        let wrapper = this.makeElem('div');
         wrapper.className = 'markedit';
-        wrapper.style.height = this.options.height;
-        wrapper.style.width = this.options.width;
+        wrapper.style.cssText = 'height:'+this.options.height+'px\
+        width:'+this.options.width+'px';
         wrapper.appendChild(this.makeControls());
         wrapper.appendChild(this.makeText());
         wrapper.appendChild(this.makePreview());
@@ -22,7 +27,7 @@ export class Dom {
     }
 
     makeIcon(icon, text) {
-        let iconEl = this.document.createElement('i');
+        let iconEl = this.makeElem('i');
         if (text) {
             iconEl.appendChild(this.document.createTextNode(text));
         }
@@ -31,7 +36,7 @@ export class Dom {
     }
 
     makeControl(icon, className, text) {
-        let control = this.document.createElement('a');
+        let control = this.makeElem('a');
         control.className = `markedit__control ${className}`;
         control.appendChild(this.makeIcon(icon, text));
         control.addEventListener('click', (e) => {
