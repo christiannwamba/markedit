@@ -1358,7 +1358,7 @@ var Dom = exports.Dom = function () {
             control.className = 'markedit__control ' + className;
             control.appendChild(this.makeIcon(icon, text));
             control.addEventListener('click', function (e) {
-                _this.handler.dispatch(e, className + 'Event');
+                _this.handler.dispatch(e, className + 'Event' + _this.options.container);
             });
             return control;
         }
@@ -1469,8 +1469,7 @@ var Editor = exports.Editor = function () {
         this.document = document;
         this.options = options;
         this.handler = new _handler.Handler(this.document);
-        this.editor = this.document.querySelector('.markedit__text');
-        this.previewEl = this.document.querySelector('.markedit__preview');
+        this.editor = this.document.querySelector('#' + options.container + ' .markedit__text');
     }
 
     _createClass(Editor, [{
@@ -1635,8 +1634,9 @@ var Editor = exports.Editor = function () {
     }, {
         key: 'preview',
         value: function preview(e) {
-            _utility.Utility.toggleClass(this.previewEl, 'open');
-            this.previewEl.innerHTML = this.parse();
+            var previewEl = this.document.querySelector('#' + this.options.container + ' .markedit__preview');
+            _utility.Utility.toggleClass(previewEl, 'open');
+            previewEl.innerHTML = this.parse();
 
             if (this.options.onPreview) {
                 this.options.onPreview(e);
@@ -1645,8 +1645,9 @@ var Editor = exports.Editor = function () {
     }, {
         key: 'fullscreen',
         value: function fullscreen(e) {
-            var container = this.document.querySelector('.markedit');
-            var controlsEl = this.document.querySelector('.markedit__controls');
+            var container = this.document.querySelector('#' + this.options.container + ' .markedit');
+            var controlsEl = this.document.querySelector('#' + this.options.container + ' .markedit__controls');
+            container.style.zIndex = '9000';
             _utility.Utility.toggleClass(container, 'fullscreen');
             controlsEl.style.width = container.clientWidth;
 
@@ -1763,9 +1764,8 @@ var Markedit = function () {
         value: function attachEvents() {
             var _this = this;
 
-            // console.log(this.editorEl);
             this.controls.forEach(function (val) {
-                _this.handler.handle(val.className + 'Event', function (e) {
+                _this.handler.handle(val.className + 'Event' + _this.options.container, function (e) {
                     if (val.className === 'preview' || val.className === 'help' || val.className === 'fullscreen') {
                         _this.editor[val.className](e);
                     } else {

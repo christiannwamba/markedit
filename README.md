@@ -1,7 +1,7 @@
 ## Markedit
 --------------------------
 
-[![Build Status](https://travis-ci.org/christiannwamba/markedit.svg?branch=master)](https://travis-ci.org/christiannwamba/markedit) [![npm version](https://badge.fury.io/js/markedit.svg)](https://www.npmjs.com/package/markedit) [![Code Climate](https://codeclimate.com/github/christiannwamba/markedit/badges/gpa.svg)](https://codeclimate.com/github/christiannwamba/markedit) [![Test Coverage](https://codeclimate.com/github/christiannwamba/markedit/badges/coverage.svg)](https://codeclimate.com/github/christiannwamba/markedit/coverage)
+[![Build Status](https://travis-ci.org/christiannwamba/markedit.svg?branch=master)](https://travis-ci.org/christiannwamba/markedit) [![npm version](https://badge.fury.io/js/markedit.svg)](https://www.npmjs.com/package/markedit) [![Bower version](https://badge.fury.io/bo/markedit.svg)](https://badge.fury.io/bo/markedit) [![Code Climate](https://codeclimate.com/github/christiannwamba/markedit/badges/gpa.svg)](https://codeclimate.com/github/christiannwamba/markedit) [![Test Coverage](https://codeclimate.com/github/christiannwamba/markedit/badges/coverage.svg)](https://codeclimate.com/github/christiannwamba/markedit/coverage)
 
 > Markedit is a simple JavaScript only markdown widget.
 

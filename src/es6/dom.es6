@@ -40,7 +40,7 @@ export class Dom {
         control.className = `markedit__control ${className}`;
         control.appendChild(this.makeIcon(icon, text));
         control.addEventListener('click', (e) => {
-            this.handler.dispatch(e, className + 'Event');
+            this.handler.dispatch(e, className + 'Event' + this.options.container);
         });
         return control;
     }

@@ -44,9 +44,8 @@ class Markedit {
     }
 
     attachEvents() {
-        // console.log(this.editorEl);
         this.controls.forEach(val => {
-            this.handler.handle(val.className + 'Event', (e) => {
+            this.handler.handle(val.className + 'Event' + this.options.container, (e) => {
                 if (val.className === 'preview' || val.className === 'help' || val.className === 'fullscreen') {
                     this.editor[val.className](e);
                 }

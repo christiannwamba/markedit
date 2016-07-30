@@ -5,10 +5,15 @@
     <body>
         <div class="page_wrap">
             <div id="md"></div>
+            <br> <br> as
+            <div id="md2"></div>
         </div>
         <script src="markedit.js"></script>
         <script>
             var mk = new Markedit({container:'md', height:'400px', resize:'both', imageUrl:'http://localhost:1337/api/image', onFullScreen: function (e) {
+                console.log(e.target)
+            }});
+            var mk2 = new Markedit({container:'md2', height:'400px', resize:'both', imageUrl:'http://localhost:1337/api/image', onFullScreen: function (e) {
                 console.log(e.target)
             }});
             console.log(mk)

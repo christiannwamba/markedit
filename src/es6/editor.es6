@@ -7,8 +7,7 @@ export class Editor {
         this.document = document;
         this.options = options;
         this.handler = new Handler(this.document);
-        this.editor = this.document.querySelector('.markedit__text');
-        this.previewEl = this.document.querySelector('.markedit__preview');
+        this.editor = this.document.querySelector(`#${options.container} .markedit__text`);
     }
 
     insertBeforeText(text) {
@@ -157,8 +156,9 @@ export class Editor {
     }
 
     preview(e) {
-        Utility.toggleClass(this.previewEl, 'open');
-        this.previewEl.innerHTML = this.parse();
+        let previewEl = this.document.querySelector(`#${this.options.container} .markedit__preview`);
+        Utility.toggleClass(previewEl, 'open');
+        previewEl.innerHTML = this.parse();
 
         if (this.options.onPreview) {
             this.options.onPreview(e);
@@ -166,8 +166,9 @@ export class Editor {
     }
 
     fullscreen(e) {
-        let container = this.document.querySelector('.markedit');
-        let controlsEl = this.document.querySelector('.markedit__controls');
+        let container = this.document.querySelector(`#${this.options.container} .markedit`);
+        let controlsEl = this.document.querySelector(`#${this.options.container} .markedit__controls`);
+        container.style.zIndex = '9000';
         Utility.toggleClass(container, 'fullscreen');
         controlsEl.style.width = container.clientWidth;
 

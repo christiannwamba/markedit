@@ -5,5 +5,5 @@ ngrok.connect(8080, (err, url) => {
         console.error(err);
     } else {
         console.log(`Tests now accessible at: ${url}`);
-    }
+}
 });
