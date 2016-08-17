@@ -1579,6 +1579,11 @@ var Editor = exports.Editor = function () {
             this.insertBeforeText(symbol);
         }
     }, {
+        key: 'insertStrikeThrough',
+        value: function insertStrikeThrough() {
+            this.insertAroundText('~~');
+        }
+    }, {
         key: 'insertBold',
         value: function insertBold() {
             var symbol = '__';
@@ -1746,7 +1751,7 @@ var Markedit = function () {
         this.document = document;
         this.marked = _marked2.default;
         this.handler = new _handler.Handler(this.document);
-        this.controls = [{ icon: 'bold', className: 'bold' }, { icon: 'italic', className: 'italic' }, { icon: 'header', className: 'header' }, { icon: 'link', className: 'link' }, { icon: 'code', className: 'code' }, { icon: 'image', className: 'image' }, { icon: 'list', className: 'listUl' }, { icon: 'list-ol', className: 'listOl' }, { text: '---', icon: 'line', className: 'line' }, { icon: 'quote-left', className: 'quote' }, { icon: 'eye', className: 'preview' }, { icon: 'fullscreen', className: 'fullscreen' }, { icon: 'question', className: 'help' }];
+        this.controls = [{ icon: 'bold', className: 'bold' }, { icon: 'italic', className: 'italic' }, { icon: 'header', className: 'header' }, { icon: 'strikethrough', className: 'strikeThrough' }, { icon: 'link', className: 'link' }, { icon: 'code', className: 'code' }, { icon: 'image', className: 'image' }, { icon: 'list', className: 'listUl' }, { icon: 'list-ol', className: 'listOl' }, { text: '---', icon: 'line', className: 'line' }, { icon: 'quote-left', className: 'quote' }, { icon: 'eye', className: 'preview' }, { icon: 'fullscreen', className: 'fullscreen' }, { icon: 'question', className: 'help' }];
         this.buildDOM();
         this.attachEvents();
     }

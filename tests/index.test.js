@@ -11927,6 +11927,11 @@ var Editor = exports.Editor = function () {
             this.insertBeforeText(symbol);
         }
     }, {
+        key: 'insertStrikeThrough',
+        value: function insertStrikeThrough() {
+            this.insertAroundText('~~');
+        }
+    }, {
         key: 'insertBold',
         value: function insertBold() {
             var symbol = '__';

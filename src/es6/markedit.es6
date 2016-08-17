@@ -40,6 +40,7 @@ class Markedit {
             {icon: 'bold', className: 'bold'},
             {icon: 'italic', className: 'italic'},
             {icon: 'header', className: 'header'},
+            {icon: 'strikethrough', className: 'strikeThrough'},
             {icon: 'link', className: 'link'},
             {icon: 'code', className: 'code'},
             {icon: 'image', className: 'image'},

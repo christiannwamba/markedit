@@ -335,8 +335,8 @@ Description: Github README style. Includes theme for Pygmentized code blocks.
 
 @font-face {
   font-family: 'icomoon';
-  src: url("fonts/icomoon.eot?2qxul2");
-  src: url("fonts/icomoon.eot?2qxul2#iefix") format("embedded-opentype"), url("fonts/icomoon.ttf?2qxul2") format("truetype"), url("fonts/icomoon.woff?2qxul2") format("woff"), url("fonts/icomoon.svg?2qxul2#icomoon") format("svg");
+  src: url("fonts/icomoon.eot?9z0cgw");
+  src: url("fonts/icomoon.eot?9z0cgw#iefix") format("embedded-opentype"), url("fonts/icomoon.ttf?9z0cgw") format("truetype"), url("fonts/icomoon.woff?9z0cgw") format("woff"), url("fonts/icomoon.svg?9z0cgw#icomoon") format("svg");
   font-weight: normal;
   font-style: normal; }
 [class^="icon-"], [class*=" icon-"] {
@@ -357,6 +357,9 @@ Description: Github README style. Includes theme for Pygmentized code blocks.
 
 .icon-expand:before {
   content: "\e90b"; }
+
+.icon-strikethrough:before {
+  content: "\ea65"; }
 
 .icon-question:before {
   content: "\e900"; }

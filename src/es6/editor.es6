@@ -111,6 +111,10 @@ export class Editor {
         this.insertBeforeText(symbol);
     }
 
+    insertStrikeThrough() {
+        this.insertAroundText('~~');
+    }
+
     insertBold() {
         const symbol = '__';
         this.insertAroundText(symbol);
