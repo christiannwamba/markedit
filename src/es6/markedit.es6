@@ -99,11 +99,15 @@ class Markedit {
         }else{
              fd = {};
         }
-        var xhr = (typeof XDomianRequest === "function")? new XDomianRequest() : new XMLHttpRequest();
+        var xhr = ( // always use native cross-domain ajax support in IE8/IE9
+                    typeof XDomianRequest === "function" 
+                    && (({}).hasOwnProperty.call((new XMLHttpRequest()), 'withCredentials'))
+                  ) ? new XDomianRequest() : new XMLHttpRequest();
         xhr.onload = (ev) => {
             this.editor.insertImage(e, ev.target.response.image);
         };
-        xhr.onerror = function(){};
+        xhr.onerror = () => {};
+        xhr.ontimeout = () => {}; // this applies only to [XDomainRequest]
         xhr.open('POST', url);
         xhr.responseType = 'json';
         xhr.send(fd);

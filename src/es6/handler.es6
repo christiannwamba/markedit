@@ -15,8 +15,8 @@ export class Handler {
                 cancelable: true
             });
             e.currentTarget.dispatchEvent(event);
-        }else  if (document.createEventObject) {   // IE before version 9
-            var customEvent = document.createEventObject (window.event);
+        }else  if (this.document.createEventObject) {   // IE before version 10
+            var customEvent = this.document.createEventObject (window.event);
               customEvent.detail = payload;
               e.srcElement.fireEvent ("on"+cType, customEvent);
         }

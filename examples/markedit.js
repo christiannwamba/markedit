@@ -1111,7 +1111,8 @@ function escape(html, encode) {
 }
 
 function unescape(html) {
-  return html.replace(/&([#\w]+);/g, function(_, n) {
+	// explicitly match decimal, hex, and named HTML entities 
+  return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/g, function(_, n) {
     n = n.toLowerCase();
     if (n === 'colon') return ':';
     if (n.charAt(0) === '#') {
@@ -1316,6 +1317,14 @@ var _handler = require('./handler.es6');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function makeElem(elemName) {
+    return this.document.createElement(elemName);
+}
+
+function eName(event) {
+    return this.eventListenerFunc === 'attachEvent' ? 'on' + event : event;
+}
+
 var Dom = exports.Dom = function () {
     function Dom(controls, options) {
         _classCallCheck(this, Dom);
@@ -1323,26 +1332,32 @@ var Dom = exports.Dom = function () {
         this.document = document;
         this.controls = controls;
         this.options = options;
+        this.eventListenerFunc = 'addEventListener' in this.document.body ? 'addEventListener' : 'attachEvent';
         this.handler = new _handler.Handler(document);
     }
 
     _createClass(Dom, [{
         key: 'makeWrapper',
         value: function makeWrapper() {
-            var wrapper = this.document.createElement('div');
+            var wrapper = makeElem.bind(this)('div');
+            // using document fragments is much quicker and performant
+            var frag = this.document.createDocumentFragment();
             wrapper.className = 'markedit';
-            wrapper.style.height = this.options.height;
+            wrapper.style.cssText = 'height:' + this.options.height + 'px;width:' + this.options.width + 'px';
             wrapper.style.width = this.options.width;
-            wrapper.appendChild(this.makeControls());
-            wrapper.appendChild(this.makeText());
-            wrapper.appendChild(this.makePreview());
-            wrapper.appendChild(this.makeUploader());
+            wrapper.style.height = this.options.height;
+
+            frag.appendChild(this.makeControls());
+            frag.appendChild(this.makeText());
+            frag.appendChild(this.makePreview());
+            frag.appendChild(this.makeUploader());
+            wrapper.appendChild(frag);
             return wrapper;
         }
     }, {
         key: 'makeIcon',
         value: function makeIcon(icon, text) {
-            var iconEl = this.document.createElement('i');
+            var iconEl = makeElem.bind(this)('i');
             if (text) {
                 iconEl.appendChild(this.document.createTextNode(text));
             }
@@ -1354,10 +1369,10 @@ var Dom = exports.Dom = function () {
         value: function makeControl(icon, className, text) {
             var _this = this;
 
-            var control = this.document.createElement('a');
+            var control = makeElem.bind(this)('a');
             control.className = 'markedit__control ' + className;
             control.appendChild(this.makeIcon(icon, text));
-            control.addEventListener('click', function (e) {
+            control[this.eventListenerFunc](eName.bind(this)('click'), function (e) {
                 _this.handler.dispatch(e, className + 'Event' + _this.options.container);
             });
             return control;
@@ -1365,7 +1380,7 @@ var Dom = exports.Dom = function () {
     }, {
         key: 'makeDivider',
         value: function makeDivider() {
-            var divider = this.document.createElement('span');
+            var divider = makeElem.bind(this)('span');
             divider.className = 'markedit__divider';
             return divider;
         }
@@ -1375,7 +1390,7 @@ var Dom = exports.Dom = function () {
             var _this2 = this;
 
             var controls = this.controls;
-            var controlsEl = this.document.createElement('div');
+            var controlsEl = makeElem.bind(this)('div');
             controlsEl.className = 'markedit__controls';
             controls.forEach(function (control) {
                 if (controls.indexOf(control) % 3 === 0 && controls.indexOf(control) > 0) {
@@ -1390,22 +1405,22 @@ var Dom = exports.Dom = function () {
         value: function makeText() {
             var _this3 = this;
 
-            var text = this.document.createElement('textarea');
+            var text = makeElem.bind(this)('textarea');
             var tHeight = text.clientHeight;
             var tWidth = text.clientWidth;
             text.className = 'markedit__text';
             text.style.resize = this.options.resize;
-            text.addEventListener('mousemove', function (e) {
+            text[this.eventListenerFunc](eName.bind(this)('mousemove'), function (e) {
                 if (tHeight !== text.clientHeight || tWidth !== text.clientWidth) {
                     _this3.handler.dispatch(e, 'onResize', { width: text.clientWidth });
                 }
             });
-            text.addEventListener('focus', function (e) {
+            text[this.eventListenerFunc](eName.bind(this)('focus'), function (e) {
                 if (_this3.options.onFocus) {
                     _this3.options.onFocus(e);
                 }
             });
-            text.addEventListener('blur', function (e) {
+            text[this.eventListenerFunc](eName.bind(this)('blur'), function (e) {
                 if (_this3.options.onBlur) {
                     _this3.options.onBlur(e);
                 }
@@ -1415,7 +1430,7 @@ var Dom = exports.Dom = function () {
     }, {
         key: 'makePreview',
         value: function makePreview() {
-            var preview = this.document.createElement('div');
+            var preview = makeElem.bind(this)('div');
             preview.className = 'markedit__preview';
             return preview;
         }
@@ -1424,13 +1439,13 @@ var Dom = exports.Dom = function () {
         value: function makeUploader() {
             var _this4 = this;
 
-            var uploader = this.document.createElement('input');
+            var uploader = makeElem.bind(this)('input');
             uploader.setAttribute('id', 'markedit__upload');
             uploader.setAttribute('type', 'file');
             uploader.style.visibility = 'hidden';
             uploader.style.height = '1px';
             uploader.style.width = '1px';
-            uploader.addEventListener('change', function (e) {
+            uploader[this.eventListenerFunc](eName.bind(this)('change'), function (e) {
                 _this4.handler.dispatch(e, 'newImage');
             });
             return uploader;
@@ -1671,7 +1686,7 @@ var Editor = exports.Editor = function () {
 }();
 
 },{"./handler.es6":5,"./utility.es6":7,"marked":2}],5:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -1689,8 +1704,9 @@ var Handler = exports.Handler = function () {
     }
 
     _createClass(Handler, [{
-        key: "dispatch",
+        key: 'dispatch',
         value: function dispatch(e, cType, payload) {
+            e = e || window.event;
             if (window.CustomEvent) {
                 /*global CustomEvent :true*/
                 /*eslint no-undef: "error"*/
@@ -1700,12 +1716,21 @@ var Handler = exports.Handler = function () {
                     cancelable: true
                 });
                 e.currentTarget.dispatchEvent(event);
+            } else if (this.document.createEventObject) {
+                // IE before version 10
+                var customEvent = this.document.createEventObject(window.event);
+                customEvent.detail = payload;
+                e.srcElement.fireEvent("on" + cType, customEvent);
             }
         }
     }, {
-        key: "handle",
+        key: 'handle',
         value: function handle(cType, handlerFunc) {
-            this.document.addEventListener(cType, handlerFunc, false);
+            if ('addEventListener' in this.document) {
+                this.document.addEventListener(cType, handlerFunc, false);
+            } else if ('attachEvent' in this.document) {
+                this.document.attachEvent("on" + cType, handlerFunc);
+            }
         }
     }]);
 
@@ -1742,6 +1767,25 @@ var Markedit = function () {
         _classCallCheck(this, Markedit);
 
         var defaultOptions = { height: '400px', width: '800px' };
+
+        Object.assign = Object.assign || function (dest) {
+            if (dest === void 0) {
+                throw new TypeError('Cannot convert undefined or null to object');
+            }
+            dest = Object(dest);
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                if (source !== void 0) {
+                    for (var key in source) {
+                        if ({}.hasOwnProperty.call(source, key)) {
+                            dest[key] = source[key];
+                        }
+                    }
+                }
+            }
+            return dest;
+        };
+
         this.options = Object.assign({}, defaultOptions, options);
 
         if (!this.options.container) {
@@ -1798,14 +1842,22 @@ var Markedit = function () {
             var _this2 = this;
 
             /*global XMLHttpRequest FormData :true*/
-            var file = e.target.files[0];
+            var file = e.target.files[0],
+                fd;
             console.log(e.target.files);
-            var fd = new FormData();
-            fd.append('image', file);
-            var xhr = new XMLHttpRequest();
+            if (typeof FormData == "function") {
+                fd = new FormData();
+                fd.append('image', file);
+            } else {
+                fd = {};
+            }
+            var xhr = // always use native cross-domain ajax support in IE8/IE9
+            typeof XDomianRequest === "function" && {}.hasOwnProperty.call(new XMLHttpRequest(), 'withCredentials') ? new XDomianRequest() : new XMLHttpRequest();
             xhr.onload = function (ev) {
                 _this2.editor.insertImage(e, ev.target.response.image);
             };
+            xhr.onerror = function () {};
+            xhr.ontimeout = function () {}; // this applies only to [XDomainRequest]
             xhr.open('POST', url);
             xhr.responseType = 'json';
             xhr.send(fd);
@@ -1838,7 +1890,10 @@ var Utility = exports.Utility = function () {
     _createClass(Utility, null, [{
         key: 'capitalizeFirstLetter',
         value: function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
+            if (typeof string !== "string") {
+                return null;
+            }
+            return string[0].toUpperCase() + string.slice(1);
         }
     }, {
         key: 'toggleClass',
@@ -1846,12 +1901,12 @@ var Utility = exports.Utility = function () {
             if (!element || !className) {
                 return;
             }
-            var classString = element.className;
+            var classString = element.className || element.getAttribute('className');
             var nameIndex = classString.indexOf(className);
             if (nameIndex === -1) {
                 classString += ' ' + className;
             } else {
-                classString = classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length);
+                classString = classString.replace(className, '');
             }
             element.className = classString;
         }
