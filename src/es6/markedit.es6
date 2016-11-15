@@ -8,6 +8,25 @@ class Markedit {
 
     constructor(options) {
         var defaultOptions = {height: '400px', width: '800px'};
+        
+        Object.assign = Object.assign || function(dest){
+               if(dest === void 0){
+                  throw new TypeError('Cannot convert undefined or null to object');
+               }
+               dest = Object(dest);
+               for(var i = 1; i < arguments.length; i++){
+                    var source = arguments[i];
+                    if(source !== void 0){
+                        for(var key in source){
+                           if(({}).hasOwnProperty.call(source, key)){
+                                dest[key] = source[key];
+                           }
+                        }
+                    }
+               }
+               return dest;
+        }
+
         this.options = Object.assign({}, defaultOptions, options);
 
         if (!this.options.container) {
@@ -72,14 +91,23 @@ class Markedit {
 
     handleImageUrlUpload(e, url) {
         /*global XMLHttpRequest FormData :true*/
-        var file = e.target.files[0];
+        var file = e.target.files[0], fd;
         console.log(e.target.files);
-        var fd = new FormData();
-        fd.append('image', file);
-        var xhr = new XMLHttpRequest();
+        if(typeof FormData == "function"){
+             fd = new FormData();
+             fd.append('image', file);
+        }else{
+             fd = {};
+        }
+        var xhr = ( // always use native cross-domain ajax support in IE8/IE9
+                    typeof XDomianRequest === "function" 
+                    && (({}).hasOwnProperty.call((new XMLHttpRequest()), 'withCredentials'))
+                  ) ? new XDomianRequest() : new XMLHttpRequest();
         xhr.onload = (ev) => {
             this.editor.insertImage(e, ev.target.response.image);
         };
+        xhr.onerror = () => {};
+        xhr.ontimeout = () => {}; // this applies only to [XDomainRequest]
         xhr.open('POST', url);
         xhr.responseType = 'json';
         xhr.send(fd);
